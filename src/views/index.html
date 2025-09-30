@@ -1,69 +1,143 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <title>App Interativo com Electron</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        background-color: #f3f3f3;
-      }
-      h1 {
-        color: #333;
-      }
-      input, button {
-        padding: 8px;
-        font-size: 16px;
-        margin: 5px 0;
-      }
-      #output {
-        margin-top: 15px;
-        padding: 10px;
-        background-color: #e0e0e0;
-        border-radius: 5px;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>🚀 App Interativo com Electron</h1>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>App Interativo com Electron</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(120deg, #89f7fe, #66a6ff);
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #333;
+      animation: fadeIn 1s ease-in;
+    }
 
-    <label for="nome">Digite seu nome:</label><br />
-    <input type="text" id="nome" placeholder="Seu nome aqui" /><br />
-    <button onclick="mostrarNome()">Mostrar nome</button>
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      animation: slideDown 1s ease-out;
+    }
 
-    <div id="output"></div>
+    h2 {
+      margin-top: 40px;
+      animation: fadeIn 1.5s ease-in;
+    }
 
-    <hr />
+    input[type="text"] {
+      padding: 10px;
+      width: 250px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: 10px;
+    }
 
-    <h2>🖱️ Clique no botão!</h2>
-    <button onclick="incrementarContador()">Clique aqui</button>
-    <p>Cliques: <span id="contador"></span></p>
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
 
-    <script>
-      function mostrarNome() {
-        const nome = document.getElementById("nome").value;
-        const output = document.getElementById("output");
-        if (nome.trim() === "") {
-          output.innerHTML = "Por favor, digite um nome válido.";
-        } else {
-          output.innerHTML = `Olá, <strong>${nome}</strong>! 👋`;
-        }
+    button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    #output {
+      margin-top: 20px;
+      font-size: 18px;
+      padding: 15px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      min-height: 40px;
+      animation: fadeInOutput 0.5s ease-out;
+    }
+
+    #contador {
+      font-weight: bold;
+      color: #007bff;
+      font-size: 24px;
+      margin-left: 5px;
+    }
+
+    /* Animações */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeInOutput {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .pulse {
+      animation: pulse 0.3s ease;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 App Interativo com Electron</h1>
+
+  <label for="nome">Digite seu nome:</label><br />
+  <input type="text" id="nome" placeholder="Seu nome aqui" /><br />
+  <button onclick="mostrarNome()">👋 Mostrar nome</button>
+
+  <div id="output"></div>
+
+  <h2>🖱️ Clique no botão!</h2>
+  <button onclick="incrementarContador()">Clique aqui</button>
+  <p>Cliques: <span id="contador">0</span></p>
+
+  <script>
+    function mostrarNome() {
+      const nome = document.getElementById("nome").value.trim();
+      const output = document.getElementById("output");
+
+      if (nome === "") {
+        output.innerHTML = "⚠️ Por favor, digite um nome válido.";
+      } else {
+        output.innerHTML = `Olá, <strong>${nome}</strong>! 👋 Bem-vindo ao seu app.`;
       }
 
-      let cliques = 0;
-      function incrementarContador() {
-        cliques++;
-        document.getElementById("contador").textContent = cliques;
-      }
-    </script>
-  </body>
+      output.style.animation = "none";
+      output.offsetHeight; // reflow
+      output.style.animation = "fadeInOutput 0.5s ease-out";
+    }
+
+    let cliques = 0;
+    function incrementarContador() {
+      cliques++;
+      const contador = document.getElementById("contador");
+      contador.textContent = cliques;
+      
+      contador.classList.remove("pulse");
+      void contador.offsetWidth; // reflow para reiniciar animação
+      contador.classList.add("pulse");
+    }
+  </script>
+</body>
 </html>
